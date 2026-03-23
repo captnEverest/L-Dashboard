@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L-Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <span class="site-header__logo">L<span>·</span>Dashboard</span>
+      <nav class="site-header__nav">
+        <a class="nav-link active" href="index.html">Dashboard</a>
+        <a class="nav-link" href="checkin.html">Daily Check-in</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Main ───────────────────────────────────────────── -->
+  <main class="site-main" id="dashboard-root">
+
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle" id="dashboard-date">Loading…</p>
+
+    <!-- Today's Summary Cards -->
+    <div class="section-header">
+      <span class="section-title">Today</span>
+    </div>
+
+    <div class="summary-grid" style="margin-bottom:32px;">
+      <div class="card" id="card-weight">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+      <div class="card" id="card-water">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+      <div class="card" id="card-sleep">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+      <div class="card" id="card-calories">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+      <div class="card" id="card-habits">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+      <div class="card" id="card-workout">
+        <div class="card-label skeleton skeleton-text"></div>
+        <div class="card-value skeleton skeleton-value"></div>
+      </div>
+    </div>
+
+    <!-- Weekly / Trend Charts -->
+    <div class="section-header">
+      <span class="section-title">Trends</span>
+      <span class="section-hint">last 14 days</span>
+    </div>
+
+    <div class="charts-grid" style="margin-bottom:32px;">
+      <div class="chart-card">
+        <div class="card-label">Weight</div>
+        <canvas id="chart-weight"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Sleep hours</div>
+        <canvas id="chart-sleep"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Water intake</div>
+        <canvas id="chart-water"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Habit completion (30 days)</div>
+        <div id="habit-trend-bars" class="habit-bar-grid" style="padding-top:8px;">
+          <p class="state-loading">Loading…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supplements -->
+    <div class="section-header">
+      <span class="section-title">Supplements</span>
+      <span class="section-hint">tap to toggle today</span>
+    </div>
+
+    <div class="card" style="margin-bottom:32px;">
+      <div class="supplements-grid" id="supplements-grid">
+        <p class="state-loading">Loading…</p>
+      </div>
+    </div>
+
+    <!-- School / Work (Phase 2 placeholder) -->
+    <div class="section-header">
+      <span class="section-title">School &amp; Work</span>
+    </div>
+
+    <div class="card coming-soon-card">
+      Coming in Phase 2 · tasks, deadlines, papers
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // set date subtitle
+    document.getElementById("dashboard-date").textContent = new Date().toLocaleDateString("en-US", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
+  </script>
+
+</body>
+</html>

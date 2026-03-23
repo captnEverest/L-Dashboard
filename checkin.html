@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Check-in · L-Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <span class="site-header__logo">L<span>·</span>Dashboard</span>
+      <nav class="site-header__nav">
+        <a class="nav-link" href="index.html">Dashboard</a>
+        <a class="nav-link active" href="checkin.html">Daily Check-in</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Main ───────────────────────────────────────────── -->
+  <main class="site-main" id="checkin-root">
+
+    <h1 class="page-title">Daily Check-in</h1>
+    <p class="page-subtitle" id="checkin-date">Loading…</p>
+
+    <!-- Already submitted notice -->
+    <div class="already-submitted-bar" id="already-submitted-bar">
+      <span>You already submitted today's check-in. Fields are pre-filled.</span>
+      <button class="btn btn--secondary" id="edit-mode-btn" type="button">Edit entry</button>
+    </div>
+
+    <!-- Form -->
+    <form class="checkin-form" id="checkin-form" novalidate>
+
+      <!-- Body section -->
+      <div class="form-section">
+        <div class="form-section-title">Body</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="field-weight">Weight (lbs)</label>
+            <input type="number" id="field-weight" name="weight" step="0.1" min="50" max="500" placeholder="e.g. 172.4" />
+          </div>
+          <div class="field">
+            <label for="field-water">Water (oz)</label>
+            <input type="number" id="field-water" name="water_oz" step="1" min="0" max="300" placeholder="e.g. 80" />
+          </div>
+        </div>
+
+        <div class="field-row field-row--3">
+          <div class="field">
+            <label for="field-sleep">Sleep (hrs)</label>
+            <input type="number" id="field-sleep" name="sleep_hrs" step="0.5" min="0" max="24" placeholder="e.g. 7.5" />
+          </div>
+          <div class="field">
+            <label>Sleep quality</label>
+            <!-- rendered right-to-left so CSS :checked ~ label works correctly -->
+            <div class="star-rating" role="group" aria-label="Sleep quality 1 to 5">
+              <input type="radio" id="star-5" name="sleep_quality" value="5" />
+              <label for="star-5" title="5 — Excellent">★</label>
+              <input type="radio" id="star-4" name="sleep_quality" value="4" />
+              <label for="star-4" title="4 — Good">★</label>
+              <input type="radio" id="star-3" name="sleep_quality" value="3" />
+              <label for="star-3" title="3 — OK">★</label>
+              <input type="radio" id="star-2" name="sleep_quality" value="2" />
+              <label for="star-2" title="2 — Poor">★</label>
+              <input type="radio" id="star-1" name="sleep_quality" value="1" />
+              <label for="star-1" title="1 — Terrible">★</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="field-calories">Calories (kcal)</label>
+            <input type="number" id="field-calories" name="calories" step="1" min="0" max="10000" placeholder="e.g. 2100" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplements section -->
+      <div class="form-section">
+        <div class="form-section-title">Supplements</div>
+        <div class="check-list" id="supplement-checks">
+          <!-- rendered by app.js from CONFIG.SUPPLEMENTS -->
+        </div>
+      </div>
+
+      <!-- Habits section -->
+      <div class="form-section">
+        <div class="form-section-title">Habits</div>
+        <div class="check-list" id="habit-checks">
+          <!-- rendered by app.js from CONFIG.HABITS -->
+        </div>
+      </div>
+
+      <!-- Notes section -->
+      <div class="form-section">
+        <div class="form-section-title">Notes</div>
+        <div class="field">
+          <label for="field-notes">Anything on your mind today?</label>
+          <textarea id="field-notes" name="notes" placeholder="Workout details, how you're feeling, things to remember…"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="submit-banner" id="result-banner"></div>
+        <div>
+          <button class="btn btn--primary" id="submit-btn" type="submit">Submit Check-in</button>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById("checkin-date").textContent = new Date().toLocaleDateString("en-US", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
+  </script>
+
+</body>
+</html>
