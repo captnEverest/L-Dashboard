@@ -748,6 +748,264 @@ textarea {
   pointer-events: none;
 }
 
+/* ── Nav hamburger (mobile) ────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+
+@media (max-width: 660px) {
+  .nav-hamburger {
+    display: flex;
+  }
+  .site-header {
+    position: relative;
+  }
+  .site-header__nav {
+    display: none;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px var(--gap);
+    flex-direction: column;
+    gap: 2px;
+    z-index: 100;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+  .site-header__nav.open {
+    display: flex;
+  }
+  .nav-link.active {
+    width: fit-content;
+  }
+}
+
+/* ── summary-grid 4-col variant ────────────────────────────── */
+.summary-grid--4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 720px) {
+  .summary-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Select input ──────────────────────────────────────────── */
+.select-input {
+  background:    var(--bg-input);
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  color:         var(--text);
+  font-family:   var(--font-mono);
+  font-size:     0.95rem;
+  padding:       10px 12px;
+  width:         100%;
+  outline:       none;
+  cursor:        pointer;
+  transition:    border-color 0.15s;
+  appearance:    none;
+}
+
+.select-input:focus {
+  border-color: var(--accent);
+}
+
+input[type="date"] {
+  background:    var(--bg-input);
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  color:         var(--text);
+  font-family:   var(--font-mono);
+  font-size:     0.95rem;
+  padding:       10px 12px;
+  width:         100%;
+  outline:       none;
+  transition:    border-color 0.15s;
+}
+
+input[type="date"]:focus {
+  border-color: var(--accent);
+}
+
+/* ── Exercise row (workout form) ───────────────────────────── */
+.exercise-row {
+  display:     grid;
+  grid-template-columns: 1fr 60px 110px 32px;
+  gap:         8px;
+  align-items: center;
+}
+
+@media (max-width: 500px) {
+  .exercise-row {
+    grid-template-columns: 1fr 50px 80px 32px;
+  }
+}
+
+/* ── Muscle group grid ─────────────────────────────────────── */
+.muscle-grid {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       10px 20px;
+}
+
+/* ── Icon button ───────────────────────────────────────────── */
+.btn--icon {
+  background:    none;
+  border:        1px solid var(--border);
+  border-radius: 4px;
+  color:         var(--text-muted);
+  cursor:        pointer;
+  font-family:   var(--font-mono);
+  font-size:     0.8rem;
+  padding:       3px 7px;
+  line-height:   1;
+  transition:    border-color 0.12s, color 0.12s;
+  white-space:   nowrap;
+}
+
+.btn--icon:hover:not(:disabled) {
+  border-color: var(--accent);
+  color:        var(--accent);
+}
+
+.btn--icon--remove:hover {
+  border-color: var(--danger) !important;
+  color:        var(--danger) !important;
+}
+
+.btn--icon:disabled {
+  opacity: 0.3;
+  cursor:  not-allowed;
+}
+
+/* ── Workout history table ─────────────────────────────────── */
+.workout-table {
+  width:           100%;
+  border-collapse: collapse;
+  font-family:     var(--font-mono);
+  font-size:       0.78rem;
+}
+
+.workout-table th {
+  text-align:   left;
+  padding:      8px 12px;
+  color:        var(--text-muted);
+  font-weight:  400;
+  border-bottom: 1px solid var(--border);
+  white-space:  nowrap;
+}
+
+.workout-table td {
+  padding:       8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.workout-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.workout-table .notes-cell {
+  color:      var(--text-muted);
+  font-size:  0.72rem;
+  max-width:  200px;
+}
+
+.workout-row--strength  { border-left: 3px solid var(--accent); }
+.workout-row--cardio    { border-left: 3px solid var(--amber); }
+.workout-row--hiit      { border-left: 3px solid var(--danger); }
+.workout-row--mobility  { border-left: 3px solid var(--text-faint); }
+.workout-row--sport     { border-left: 3px solid #5B9BD5; }
+.workout-row--other     { border-left: 3px solid var(--border); }
+
+/* ── Measurement toggles (body comp) ──────────────────────── */
+.measurement-toggles {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       6px;
+  margin-bottom: 10px;
+}
+
+.measure-toggle {
+  font-family:    var(--font-mono);
+  font-size:      0.7rem;
+  padding:        3px 10px;
+  border-radius:  99px;
+  border:         1px solid var(--border);
+  cursor:         pointer;
+  background:     var(--bg-input);
+  color:          var(--text-faint);
+  user-select:    none;
+  transition:     border-color 0.12s, color 0.12s, background 0.12s;
+}
+
+/* ── Settings list ─────────────────────────────────────────── */
+.settings-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.settings-list-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            0;
+}
+
+.settings-list-item {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     8px 10px;
+  background:  var(--bg-input);
+  border:      1px solid var(--border);
+  border-radius: var(--radius);
+  font-size:   0.875rem;
+}
+
+.settings-list-item__name {
+  flex: 1;
+}
+
+.settings-list-item__controls {
+  display: flex;
+  gap:     4px;
+}
+
+.settings-add-row {
+  display:    flex;
+  gap:        8px;
+  margin-top: 8px;
+}
+
+.settings-add-row input {
+  flex: 1;
+}
+
+.settings-confirm {
+  font-family: var(--font-mono);
+  font-size:   0.75rem;
+  color:       var(--accent);
+  margin-left: 12px;
+  opacity:     0;
+  transition:  opacity 0.3s;
+}
+
+.settings-confirm.visible {
+  opacity: 1;
+}
+
 /* ── Skeleton loader ───────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }

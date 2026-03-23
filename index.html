@@ -11,10 +11,20 @@
   <!-- ── Header ─────────────────────────────────────────── -->
   <header class="site-header">
     <div class="site-header__inner">
-      <span class="site-header__logo">L<span>·</span>Dashboard</span>
-      <nav class="site-header__nav">
+      <a class="site-header__logo" href="index.html">L<span>·</span>Dashboard</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect y="3" width="20" height="2" rx="1"/>
+          <rect y="9" width="20" height="2" rx="1"/>
+          <rect y="15" width="20" height="2" rx="1"/>
+        </svg>
+      </button>
+      <nav class="site-header__nav" id="site-nav">
         <a class="nav-link active" href="index.html">Dashboard</a>
-        <a class="nav-link" href="checkin.html">Daily Check-in</a>
+        <a class="nav-link" href="checkin.html">Check-in</a>
+        <a class="nav-link" href="workout.html">Workout</a>
+        <a class="nav-link" href="body.html">Body</a>
+        <a class="nav-link" href="settings.html">Settings</a>
       </nav>
     </div>
   </header>
