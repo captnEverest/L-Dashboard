@@ -25,13 +25,7 @@
     <h1 class="page-title">Daily Check-in</h1>
     <p class="page-subtitle" id="checkin-date">Loading…</p>
 
-    <!-- Already submitted notice -->
-    <div class="already-submitted-bar" id="already-submitted-bar">
-      <span>You already submitted today's check-in. Fields are pre-filled.</span>
-      <button class="btn btn--secondary" id="edit-mode-btn" type="button">Edit entry</button>
-    </div>
-
-    <!-- Form -->
+    <!-- Form — always editable, pre-fills if entry exists -->
     <form class="checkin-form" id="checkin-form" novalidate>
 
       <!-- Body section -->
@@ -56,7 +50,7 @@
           </div>
           <div class="field">
             <label>Sleep quality</label>
-            <!-- rendered right-to-left so CSS :checked ~ label works correctly -->
+            <!-- reversed so CSS :checked ~ label highlights correctly -->
             <div class="star-rating" role="group" aria-label="Sleep quality 1 to 5">
               <input type="radio" id="star-5" name="sleep_quality" value="5" />
               <label for="star-5" title="5 — Excellent">★</label>
@@ -71,8 +65,18 @@
             </div>
           </div>
           <div class="field">
-            <label for="field-calories">Calories (kcal)</label>
+            <label for="field-calories">Calories (estimated)</label>
             <input type="number" id="field-calories" name="calories" step="1" min="0" max="10000" placeholder="e.g. 2100" />
+          </div>
+        </div>
+
+        <!-- Food log + AI estimate -->
+        <div class="field">
+          <label for="field-food-log">Food log <span style="font-weight:400;text-transform:none;letter-spacing:0">(describe what you ate — AI can estimate calories)</span></label>
+          <textarea id="field-food-log" name="food_log" placeholder="e.g. Oatmeal with berries for breakfast, chicken wrap for lunch, salmon + rice for dinner, handful of almonds…" style="min-height:70px;"></textarea>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+            <button class="btn btn--secondary" id="ai-estimate-btn" type="button" style="display:none; font-size:0.78rem; padding:7px 14px;">Estimate with AI</button>
+            <span class="card-meta" id="ai-estimate-note" style="font-size:0.72rem;"></span>
           </div>
         </div>
       </div>
@@ -80,8 +84,8 @@
       <!-- Supplements section -->
       <div class="form-section">
         <div class="form-section-title">Supplements</div>
-        <div class="check-list" id="supplement-checks">
-          <!-- rendered by app.js from CONFIG.SUPPLEMENTS -->
+        <div id="supplement-checks">
+          <!-- rendered by app.js into morning/evening groups -->
         </div>
       </div>
 
@@ -97,8 +101,8 @@
       <div class="form-section">
         <div class="form-section-title">Notes</div>
         <div class="field">
-          <label for="field-notes">Anything on your mind today?</label>
-          <textarea id="field-notes" name="notes" placeholder="Workout details, how you're feeling, things to remember…"></textarea>
+          <label for="field-notes">Anything else — workout, mood, observations</label>
+          <textarea id="field-notes" name="notes" placeholder="e.g. Hit the gym, felt tired mid-afternoon, good focus session at night…"></textarea>
         </div>
       </div>
 
@@ -115,11 +119,6 @@
 
   <script src="config.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    document.getElementById("checkin-date").textContent = new Date().toLocaleDateString("en-US", {
-      weekday: "long", year: "numeric", month: "long", day: "numeric"
-    });
-  </script>
 
 </body>
 </html>

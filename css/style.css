@@ -639,6 +639,115 @@ textarea {
   text-align: right;
 }
 
+/* ── Supplement check groups ───────────────────────────────── */
+.check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.check-group + .check-group {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.check-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+
+/* ── Calendar ──────────────────────────────────────────────── */
+.cal-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.cal-month {
+  min-width: 196px;
+}
+
+.cal-month-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.cal-week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 26px);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.cal-dow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-faint);
+  text-align: center;
+  line-height: 26px;
+}
+
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 26px);
+  gap: 2px;
+}
+
+.cal-cell {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  cursor: pointer;
+}
+
+.cal-cell:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.cal-cell--empty {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+.cal-cell--filled {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.cal-cell--today {
+  border-color: var(--accent);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.cal-cell--future {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
 /* ── Skeleton loader ───────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
