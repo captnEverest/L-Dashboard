@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings · L-Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">L<span>·</span>Dashboard</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect y="3" width="20" height="2" rx="1"/>
+          <rect y="9" width="20" height="2" rx="1"/>
+          <rect y="15" width="20" height="2" rx="1"/>
+        </svg>
+      </button>
+      <nav class="site-header__nav" id="site-nav">
+        <a class="nav-link" href="index.html">Dashboard</a>
+        <a class="nav-link" href="checkin.html">Check-in</a>
+        <a class="nav-link" href="workout.html">Workout</a>
+        <a class="nav-link" href="body.html">Body</a>
+        <a class="nav-link active" href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main" id="settings-root">
+
+    <h1 class="page-title">Settings</h1>
+    <p class="page-subtitle">Changes are stored in your browser (localStorage) and override config.js defaults. Nothing is written to the repo.</p>
+
+    <div style="display:flex;flex-direction:column;gap:28px;max-width:640px;">
+
+      <!-- Daily Goals -->
+      <div class="form-section">
+        <div class="form-section-title">Daily Goals</div>
+        <div class="field-row">
+          <div class="field">
+            <label for="set-water">Water goal (oz)</label>
+            <input type="number" id="set-water" min="0" max="300" step="10" />
+          </div>
+          <div class="field">
+            <label for="set-calories">Calorie goal</label>
+            <input type="number" id="set-calories" min="0" max="10000" step="50" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="set-sleep">Sleep target (hrs)</label>
+            <input type="number" id="set-sleep" min="4" max="12" step="0.5" />
+          </div>
+          <div class="field">
+            <label for="set-workout-days">Workout days / week</label>
+            <input type="number" id="set-workout-days" min="1" max="7" step="1" />
+          </div>
+        </div>
+        <div>
+          <button class="btn btn--primary" id="save-goals-btn" type="button">Save Goals</button>
+          <span class="settings-confirm" id="goals-confirm"></span>
+        </div>
+      </div>
+
+      <!-- Apps Script URL -->
+      <div class="form-section">
+        <div class="form-section-title">Apps Script URL</div>
+        <div class="field">
+          <label for="set-script-url">Web app endpoint</label>
+          <input type="text" id="set-script-url" placeholder="https://script.google.com/macros/s/…/exec" />
+        </div>
+        <div>
+          <button class="btn btn--primary" id="save-url-btn" type="button">Save URL</button>
+          <span class="settings-confirm" id="url-confirm"></span>
+        </div>
+      </div>
+
+      <!-- Anthropic API Key -->
+      <div class="form-section">
+        <div class="form-section-title">Anthropic API Key</div>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Stored only in your browser's localStorage — never in the repo. Required to enable AI calorie estimation on the check-in form.</p>
+        <div class="field">
+          <label for="set-api-key">API key</label>
+          <input type="password" id="set-api-key" placeholder="sk-ant-…" autocomplete="off" />
+        </div>
+        <div>
+          <button class="btn btn--primary" id="save-api-key-btn" type="button">Save Key</button>
+          <span class="settings-confirm" id="api-key-confirm"></span>
+        </div>
+      </div>
+
+      <!-- Supplements -->
+      <div class="form-section">
+        <div class="form-section-title">Supplements</div>
+
+        <div class="settings-list-section">
+          <div class="check-group-label">Morning</div>
+          <div id="settings-supps-morning" class="settings-list"></div>
+          <div class="settings-add-row">
+            <input type="text" id="add-supp-morning" placeholder="New supplement…" />
+            <button class="btn btn--secondary" type="button" data-group="morning" id="btn-add-supp-morning">+ Add</button>
+          </div>
+        </div>
+
+        <div class="settings-list-section" style="margin-top:16px;">
+          <div class="check-group-label">Evening</div>
+          <div id="settings-supps-evening" class="settings-list"></div>
+          <div class="settings-add-row">
+            <input type="text" id="add-supp-evening" placeholder="New supplement…" />
+            <button class="btn btn--secondary" type="button" data-group="evening" id="btn-add-supp-evening">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habits -->
+      <div class="form-section">
+        <div class="form-section-title">Habits</div>
+        <div id="settings-habits" class="settings-list"></div>
+        <div class="settings-add-row">
+          <input type="text" id="add-habit" placeholder="New habit…" />
+          <button class="btn btn--secondary" type="button" id="btn-add-habit">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="form-section" style="border-color:var(--danger);">
+        <div class="form-section-title" style="color:var(--danger);">Reset</div>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Clears all localStorage overrides and reverts to config.js defaults. This cannot be undone.</p>
+        <button class="btn btn--secondary" id="reset-btn" type="button" style="border-color:var(--danger);color:var(--danger);">Reset to defaults</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

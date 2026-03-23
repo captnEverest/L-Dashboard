@@ -4,36 +4,27 @@
 //  Deploy as: Web app → Execute as "Me" → Access "Anyone"
 // ============================================================
 
-// sheet tab names
-var SHEET_DAILY_CHECKIN = "daily_checkin";
-var SHEET_HABITS        = "habits";
-var SHEET_SUPPLEMENTS   = "supplements";
+var SHEET_DAILY_CHECKIN  = "daily_checkin";
+var SHEET_HABITS         = "habits";
+var SHEET_SUPPLEMENTS    = "supplements";
+var SHEET_WORKOUTS       = "workouts";
+var SHEET_BODY_COMP      = "body_composition";
 
-// column order for each sheet
 var COLUMNS = {
-  daily_checkin: ["date", "weight", "water_oz", "sleep_hrs", "sleep_quality", "calories", "notes"],
-  habits:        ["date", "habit_name", "completed"],
-  supplements:   ["date", "supplement_name", "taken"],
+  daily_checkin:    ["date", "weight", "water_oz", "sleep_hrs", "sleep_quality", "calories", "food_log", "notes"],
+  habits:           ["date", "habit_name", "completed"],
+  supplements:      ["date", "supplement_name", "taken"],
+  workouts:         ["date", "type", "duration_min", "intensity", "muscle_groups", "exercises_json", "notes"],
+  body_composition: ["date", "weight_lbs", "body_fat_pct", "chest_in", "waist_in", "hips_in", "arm_left_in", "arm_right_in", "thigh_left_in", "thigh_right_in", "notes"],
 };
 
-// ── CORS headers ─────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────
 
-function corsHeaders() {
-  return {
-    "Access-Control-Allow-Origin":  "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
-}
-
-function jsonResponse(data, statusCode) {
-  var output = ContentService
+function jsonResponse(data) {
+  return ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
-  return output;
 }
-
-// ── Helpers ───────────────────────────────────────────────────
 
 function getSpreadsheet() {
   return SpreadsheetApp.getActiveSpreadsheet();
@@ -44,7 +35,6 @@ function getSheet(sheet_name) {
   var sheet = ss.getSheetByName(sheet_name);
   if (!sheet) {
     sheet = ss.insertSheet(sheet_name);
-    // write header row
     var headers = COLUMNS[sheet_name];
     if (headers) {
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -53,13 +43,10 @@ function getSheet(sheet_name) {
   return sheet;
 }
 
-// read all rows from a sheet and return as array of objects
 function sheetToObjects(sheet_name) {
   var sheet = getSheet(sheet_name);
   var data  = sheet.getDataRange().getValues();
-  if (data.length <= 1) {
-    return [];
-  }
+  if (data.length <= 1) { return []; }
 
   var headers = data[0];
   var rows    = [];
@@ -74,7 +61,6 @@ function sheetToObjects(sheet_name) {
   return rows;
 }
 
-// convert a date cell value to ISO string YYYY-MM-DD
 function toISODate(val) {
   if (!val) { return ""; }
   if (val instanceof Date) {
@@ -86,20 +72,16 @@ function toISODate(val) {
   return String(val);
 }
 
-// normalize all row dates to ISO strings
 function normalizeRows(rows) {
   for (var i = 0; i < rows.length; i++) {
-    if (rows[i].date) {
-      rows[i].date = toISODate(rows[i].date);
-    }
+    if (rows[i].date) { rows[i].date = toISODate(rows[i].date); }
   }
   return rows;
 }
 
-// append a single data object as a new row
 function appendRow(sheet_name, data_obj) {
-  var sheet   = getSheet(sheet_name);
-  var headers = COLUMNS[sheet_name];
+  var sheet      = getSheet(sheet_name);
+  var headers    = COLUMNS[sheet_name];
   var row_values = headers.map(function(col) {
     var val = data_obj[col];
     return val !== undefined && val !== null ? val : "";
@@ -107,27 +89,21 @@ function appendRow(sheet_name, data_obj) {
   sheet.appendRow(row_values);
 }
 
-// find the 1-based row index (including header) where column "date" matches target_date
 function findRowIndexByDate(sheet, target_date) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
-    var row_date = toISODate(data[i][0]); // date is always column 0
-    if (row_date === target_date) {
-      return i + 1; // 1-based
-    }
+    if (toISODate(data[i][0]) === target_date) { return i + 1; }
   }
   return -1;
 }
 
-// update a row matched by date
 function updateRowByDate(sheet_name, data_obj) {
-  var sheet      = getSheet(sheet_name);
-  var headers    = COLUMNS[sheet_name];
+  var sheet       = getSheet(sheet_name);
+  var headers     = COLUMNS[sheet_name];
   var target_date = toISODate(data_obj["date"] || "");
-  var row_index  = findRowIndexByDate(sheet, target_date);
+  var row_index   = findRowIndexByDate(sheet, target_date);
 
   if (row_index === -1) {
-    // no existing row — append instead
     appendRow(sheet_name, data_obj);
     return { status: "ok", action: "inserted" };
   }
@@ -140,17 +116,16 @@ function updateRowByDate(sheet_name, data_obj) {
   return { status: "ok", action: "updated" };
 }
 
-// upsert a supplement or habit row (match by date + name)
 function upsertNamedRow(sheet_name, data_obj, name_col) {
   var sheet       = getSheet(sheet_name);
   var headers     = COLUMNS[sheet_name];
   var data        = sheet.getDataRange().getValues();
-  var target_date  = toISODate(data_obj["date"] || "");
-  var target_name  = data_obj[name_col] || "";
+  var target_date = toISODate(data_obj["date"] || "");
+  var target_name = data_obj[name_col] || "";
 
   for (var i = 1; i < data.length; i++) {
     var row_date = toISODate(data[i][0]);
-    var row_name = data[i][1]; // name is always column 1 in habits/supplements
+    var row_name = data[i][1];
     if (row_date === target_date && String(row_name) === String(target_name)) {
       var row_values = headers.map(function(col) {
         var val = data_obj[col];
@@ -161,7 +136,6 @@ function upsertNamedRow(sheet_name, data_obj, name_col) {
     }
   }
 
-  // not found — insert
   appendRow(sheet_name, data_obj);
   return { status: "ok", action: "inserted" };
 }
@@ -170,10 +144,10 @@ function upsertNamedRow(sheet_name, data_obj, name_col) {
 
 function doGet(e) {
   try {
-    var params     = e.parameter;
-    var sheet_name = params.sheet || "";
+    var params      = e.parameter;
+    var sheet_name  = params.sheet || "";
     var date_filter = params.date || null;
-    var limit      = params.limit ? Number(params.limit) : null;
+    var limit       = params.limit ? Number(params.limit) : null;
 
     if (!COLUMNS[sheet_name]) {
       return jsonResponse({ error: "Unknown sheet: " + sheet_name });
@@ -182,19 +156,14 @@ function doGet(e) {
     var rows = sheetToObjects(sheet_name);
     rows     = normalizeRows(rows);
 
-    // filter by exact date if requested
     if (date_filter) {
-      rows = rows.filter(function(row) {
-        return row.date === date_filter;
-      });
-      // for daily_checkin, return the single object (or null)
+      rows = rows.filter(function(row) { return row.date === date_filter; });
       if (sheet_name === SHEET_DAILY_CHECKIN) {
         return jsonResponse(rows.length > 0 ? rows[0] : null);
       }
       return jsonResponse(rows);
     }
 
-    // apply limit (most recent N rows)
     if (limit && limit > 0 && rows.length > limit) {
       rows = rows.slice(rows.length - limit);
     }
@@ -212,39 +181,31 @@ function doPost(e) {
     var body       = JSON.parse(e.postData.contents);
     var sheet_name = body.sheet || "";
     var data       = body.data;
-    var method     = body._method || "POST"; // supports PUT tunneled through POST
+    var method     = body._method || "POST";
 
     if (!COLUMNS[sheet_name]) {
       return jsonResponse({ error: "Unknown sheet: " + sheet_name });
     }
 
-    // ── handle TOGGLE (supplement click from dashboard)
+    // toggle (supplement badge click from dashboard)
     if (method === "TOGGLE") {
-      var result = upsertNamedRow(sheet_name, data, "supplement_name");
-      return jsonResponse(result);
+      return jsonResponse(upsertNamedRow(sheet_name, data, "supplement_name"));
     }
 
-    // ── handle PUT (edit existing check-in)
+    // PUT — update row by date (works for daily_checkin, workouts, body_composition)
     if (method === "PUT") {
-      if (sheet_name === SHEET_DAILY_CHECKIN) {
-        var result = updateRowByDate(sheet_name, data);
-        return jsonResponse(result);
-      }
+      return jsonResponse(updateRowByDate(sheet_name, data));
     }
 
-    // ── handle POST (new data)
-    if (sheet_name === SHEET_DAILY_CHECKIN) {
-      // single object
+    // POST — new entry
+    if (sheet_name === SHEET_DAILY_CHECKIN || sheet_name === SHEET_WORKOUTS || sheet_name === SHEET_BODY_COMP) {
       appendRow(sheet_name, data);
       return jsonResponse({ status: "ok", action: "inserted" });
     }
 
     if (sheet_name === SHEET_SUPPLEMENTS) {
-      // array of supplement objects
       if (Array.isArray(data)) {
-        data.forEach(function(item) {
-          upsertNamedRow(SHEET_SUPPLEMENTS, item, "supplement_name");
-        });
+        data.forEach(function(item) { upsertNamedRow(SHEET_SUPPLEMENTS, item, "supplement_name"); });
       } else {
         upsertNamedRow(SHEET_SUPPLEMENTS, data, "supplement_name");
       }
@@ -252,11 +213,8 @@ function doPost(e) {
     }
 
     if (sheet_name === SHEET_HABITS) {
-      // array of habit objects
       if (Array.isArray(data)) {
-        data.forEach(function(item) {
-          upsertNamedRow(SHEET_HABITS, item, "habit_name");
-        });
+        data.forEach(function(item) { upsertNamedRow(SHEET_HABITS, item, "habit_name"); });
       } else {
         upsertNamedRow(SHEET_HABITS, data, "habit_name");
       }

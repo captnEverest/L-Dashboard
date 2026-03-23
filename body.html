@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Body Composition · L-Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">L<span>·</span>Dashboard</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect y="3" width="20" height="2" rx="1"/>
+          <rect y="9" width="20" height="2" rx="1"/>
+          <rect y="15" width="20" height="2" rx="1"/>
+        </svg>
+      </button>
+      <nav class="site-header__nav" id="site-nav">
+        <a class="nav-link" href="index.html">Dashboard</a>
+        <a class="nav-link" href="checkin.html">Check-in</a>
+        <a class="nav-link" href="workout.html">Workout</a>
+        <a class="nav-link active" href="body.html">Body</a>
+        <a class="nav-link" href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main" id="body-root">
+
+    <h1 class="page-title">Body Composition</h1>
+    <p class="page-subtitle">Weekly or bi-weekly deep log — separate from the daily check-in weight.</p>
+
+    <!-- Summary cards -->
+    <div class="section-header">
+      <span class="section-title">Progress</span>
+    </div>
+    <div class="summary-grid summary-grid--4" style="margin-bottom:32px;">
+      <div class="card">
+        <div class="card-label">Weight</div>
+        <div class="card-value card-value--sm" id="bc-val-weight">—</div>
+        <div class="card-meta" id="bc-meta-weight"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Body Fat %</div>
+        <div class="card-value card-value--sm" id="bc-val-bf">—</div>
+        <div class="card-meta" id="bc-meta-bf"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Lean Mass</div>
+        <div class="card-value card-value--sm" id="bc-val-lean">—</div>
+        <div class="card-meta">estimated</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Last Log</div>
+        <div class="card-value card-value--sm" id="bc-val-days" style="font-size:1rem;">—</div>
+        <div class="card-meta">days ago</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="section-header">
+      <span class="section-title">Trends</span>
+    </div>
+    <div class="charts-grid" style="margin-bottom:32px;">
+      <div class="chart-card">
+        <div class="card-label">Weight over time (lbs)</div>
+        <canvas id="chart-bc-weight"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Body fat % over time</div>
+        <canvas id="chart-bc-bf"></canvas>
+      </div>
+      <div class="chart-card" style="grid-column: span 1;">
+        <div class="card-label">Lean mass vs fat mass (lbs)</div>
+        <canvas id="chart-bc-composition"></canvas>
+      </div>
+      <div class="chart-card">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div class="card-label" style="margin:0;">Measurement trends (in)</div>
+        </div>
+        <div id="measurement-toggles" class="measurement-toggles"></div>
+        <canvas id="chart-bc-measurements"></canvas>
+      </div>
+    </div>
+
+    <!-- Log entry form -->
+    <div class="section-header">
+      <span class="section-title">Log Entry</span>
+    </div>
+
+    <form class="checkin-form" id="body-form" novalidate>
+      <div class="form-section">
+        <div class="form-section-title">Weight & Composition</div>
+
+        <div class="field-row field-row--3">
+          <div class="field">
+            <label for="field-bc-date">Date</label>
+            <input type="date" id="field-bc-date" name="date" />
+          </div>
+          <div class="field">
+            <label for="field-bc-weight">Weight (lbs)</label>
+            <input type="number" id="field-bc-weight" name="weight_lbs" step="0.1" min="50" max="500" placeholder="e.g. 172.4" />
+          </div>
+          <div class="field">
+            <label for="field-bc-bf">Body fat %</label>
+            <input type="number" id="field-bc-bf" name="body_fat_pct" step="0.1" min="2" max="60" placeholder="e.g. 18.5" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Measurements <span style="font-family:var(--font-body);font-weight:400;font-size:0.82rem;color:var(--text-muted);"> — all optional, in inches</span></div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="field-bc-chest">Chest</label>
+            <input type="number" id="field-bc-chest" name="chest_in" step="0.25" min="20" max="70" placeholder="in" />
+          </div>
+          <div class="field">
+            <label for="field-bc-waist">Waist</label>
+            <input type="number" id="field-bc-waist" name="waist_in" step="0.25" min="20" max="70" placeholder="in" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="field-bc-hips">Hips</label>
+            <input type="number" id="field-bc-hips" name="hips_in" step="0.25" min="20" max="70" placeholder="in" />
+          </div>
+          <div class="field">
+            <label for="field-bc-arm-left">Left Arm</label>
+            <input type="number" id="field-bc-arm-left" name="arm_left_in" step="0.25" min="5" max="30" placeholder="in" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="field-bc-arm-right">Right Arm</label>
+            <input type="number" id="field-bc-arm-right" name="arm_right_in" step="0.25" min="5" max="30" placeholder="in" />
+          </div>
+          <div class="field">
+            <label for="field-bc-thigh-left">Left Thigh</label>
+            <input type="number" id="field-bc-thigh-left" name="thigh_left_in" step="0.25" min="10" max="40" placeholder="in" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="field-bc-thigh-right">Right Thigh</label>
+            <input type="number" id="field-bc-thigh-right" name="thigh_right_in" step="0.25" min="10" max="40" placeholder="in" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Notes</div>
+        <div class="field">
+          <label for="field-bc-notes">Context for this measurement</label>
+          <textarea id="field-bc-notes" name="notes" placeholder="Morning fasted, after workout, changes in routine…"></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="submit-banner" id="body-result-banner"></div>
+        <div><button class="btn btn--primary" id="body-submit-btn" type="submit">Save Entry</button></div>
+      </div>
+    </form>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Log · L-Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">L<span>·</span>Dashboard</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <rect y="3" width="20" height="2" rx="1"/>
+          <rect y="9" width="20" height="2" rx="1"/>
+          <rect y="15" width="20" height="2" rx="1"/>
+        </svg>
+      </button>
+      <nav class="site-header__nav" id="site-nav">
+        <a class="nav-link" href="index.html">Dashboard</a>
+        <a class="nav-link" href="checkin.html">Check-in</a>
+        <a class="nav-link active" href="workout.html">Workout</a>
+        <a class="nav-link" href="body.html">Body</a>
+        <a class="nav-link" href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main" id="workout-root">
+
+    <h1 class="page-title">Workout Log</h1>
+    <p class="page-subtitle" id="workout-date">Loading…</p>
+
+    <!-- Weekly stats -->
+    <div class="section-header">
+      <span class="section-title">This Week</span>
+    </div>
+    <div class="summary-grid summary-grid--4" style="margin-bottom:32px;">
+      <div class="card" id="card-workouts-week">
+        <div class="card-label">Workouts</div>
+        <div class="card-value card-value--sm" id="val-workouts-week">—</div>
+        <div class="card-meta" id="meta-workouts-week"></div>
+      </div>
+      <div class="card" id="card-volume-week">
+        <div class="card-label">Volume</div>
+        <div class="card-value card-value--sm" id="val-volume-week">—<span style="font-size:.85rem"> min</span></div>
+      </div>
+      <div class="card" id="card-top-muscle">
+        <div class="card-label">Top Muscle Group</div>
+        <div class="card-value card-value--sm" id="val-top-muscle" style="font-size:1rem;">—</div>
+      </div>
+      <div class="card" id="card-streak">
+        <div class="card-label">Streak</div>
+        <div class="card-value card-value--sm" id="val-streak">—<span style="font-size:.85rem"> days</span></div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="section-header">
+      <span class="section-title">Trends</span>
+    </div>
+    <div class="charts-grid" style="margin-bottom:32px;">
+      <div class="chart-card">
+        <div class="card-label">Workouts per week (last 4 weeks)</div>
+        <canvas id="chart-workout-freq"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Duration trend (last 14 sessions)</div>
+        <canvas id="chart-workout-duration"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-label">Muscle group distribution (last 30 days)</div>
+        <div style="display:flex;align-items:center;justify-content:center;height:180px;">
+          <canvas id="chart-muscle-dist" style="height:160px !important;width:160px !important;max-width:160px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log entry form -->
+    <div class="section-header">
+      <span class="section-title">Log a Workout</span>
+      <span class="section-hint" id="workout-form-date-hint">today</span>
+    </div>
+
+    <form class="checkin-form" id="workout-form" novalidate style="margin-bottom:32px;">
+      <div class="form-section">
+        <div class="form-section-title">Session</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="field-workout-date">Date</label>
+            <input type="date" id="field-workout-date" name="date" />
+          </div>
+          <div class="field">
+            <label for="field-workout-type">Type</label>
+            <select id="field-workout-type" name="type" class="select-input">
+              <option value="">Select…</option>
+              <option value="Strength">Strength</option>
+              <option value="Cardio">Cardio</option>
+              <option value="HIIT">HIIT</option>
+              <option value="Mobility/Stretch">Mobility / Stretch</option>
+              <option value="Sport">Sport</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row field-row--3">
+          <div class="field">
+            <label for="field-workout-duration">Duration (min)</label>
+            <input type="number" id="field-workout-duration" name="duration_min" min="1" max="300" placeholder="60" />
+          </div>
+          <div class="field">
+            <label>Intensity</label>
+            <div class="star-rating" role="group" aria-label="Intensity 1 to 5">
+              <input type="radio" id="wstar-5" name="intensity" value="5" />
+              <label for="wstar-5" title="5 — Max">★</label>
+              <input type="radio" id="wstar-4" name="intensity" value="4" />
+              <label for="wstar-4" title="4 — Hard">★</label>
+              <input type="radio" id="wstar-3" name="intensity" value="3" />
+              <label for="wstar-3" title="3 — Moderate">★</label>
+              <input type="radio" id="wstar-2" name="intensity" value="2" />
+              <label for="wstar-2" title="2 — Easy">★</label>
+              <input type="radio" id="wstar-1" name="intensity" value="1" />
+              <label for="wstar-1" title="1 — Very light">★</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Muscle groups</label>
+          <div class="muscle-grid">
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Chest"><span>Chest</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Back"><span>Back</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Shoulders"><span>Shoulders</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Arms"><span>Arms</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Core"><span>Core</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Legs"><span>Legs</span></label>
+            <label class="check-item"><input type="checkbox" name="muscle_group" value="Full Body"><span>Full Body</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Exercises</div>
+        <div id="exercises-container" style="display:flex;flex-direction:column;gap:8px;">
+          <!-- rows appended by JS -->
+        </div>
+        <button type="button" class="btn btn--secondary" id="add-exercise-btn" style="margin-top:8px;width:fit-content;">+ Add exercise</button>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Notes</div>
+        <div class="field">
+          <label for="field-workout-notes">How did it go?</label>
+          <textarea id="field-workout-notes" name="notes" placeholder="PRs, how you felt, anything notable…"></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="submit-banner" id="workout-result-banner"></div>
+        <div><button class="btn btn--primary" id="workout-submit-btn" type="submit">Log Workout</button></div>
+      </div>
+    </form>
+
+    <!-- History table -->
+    <div class="section-header">
+      <span class="section-title">History</span>
+      <span class="section-hint">last 14 entries</span>
+    </div>
+    <div class="card" style="overflow-x:auto;">
+      <div id="workout-history-container">
+        <p class="state-loading">Loading…</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
